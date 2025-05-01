@@ -232,10 +232,29 @@ class PerplexityMCPServer {
     }
     this.isInitializing = true;
     try {
+      // --- Use Environment Variable for persistent cookies ---
+      const envUserDataDir = process.env.PUPPETEER_USER_DATA_DIR;
+      let userDataDirPath: string;
+
+      if (envUserDataDir) {
+        console.log(`Using userDataDir from environment variable: ${envUserDataDir}`);
+        userDataDirPath = envUserDataDir; // Use the path from the environment
+      } else {
+        console.log('Environment variable PUPPETEER_USER_DATA_DIR not set. Using default relative path.');
+        // Fallback to original relative path (or choose a fixed default)
+        userDataDirPath = join(dirname(fileURLToPath(import.meta.url)), '..', 'puppeteer_user_data');
+      }
+      // Ensure the directory exists (especially important for the fallback)
+      if (!existsSync(userDataDirPath)) {
+        console.warn(`User data directory NOT FOUND: ${userDataDirPath}. Creating it.`);
+        mkdirSync(userDataDirPath, { recursive: true });
+      }
+
       if (this.browser) {
         await this.browser.close();
       }
       this.browser = await puppeteer.launch({
+        userDataDir: userDataDirPath, // Uses the path from env var or fallback
         headless: true,
         args: [
           '--no-sandbox',

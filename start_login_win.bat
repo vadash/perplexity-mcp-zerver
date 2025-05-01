@@ -1,0 +1,1 @@
+"%appdata%\..\local\ms-playwright\CHROMI~1\chrome-win\chrome.exe" --user-data-dir="puppeteer_user_data"
