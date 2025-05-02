@@ -1169,38 +1169,13 @@ class PerplexityMCPServer {
 
   private async handleGetDocumentation(args: { query: string, context?: string }): Promise<string> {
     const { query, context = '' } = args;
-    const prompt = `Provide comprehensive documentation and usage examples for ${query}. ${context ? 'Focus on: ' + context : ''
-      } Include:
-1. Basic overview and purpose
-2. Key features and capabilities
-3. Installation/setup if applicable
-4. Common usage examples with code snippets
-5. Best practices and performance considerations  
-6. Common pitfalls to avoid
-7. Version compatibility information
-8. Links to official documentation
-9. Community resources (forums, chat channels)
-10. Related tools/libraries that work well with it
-
-Crucially, also provide the main official URL(s) for this documentation on separate lines, prefixed with 'Official URL(s):'.`;
+    const prompt = `Provide comprehensive documentation and usage examples for ${query}. ${context ? 'Focus on: ' + context : ''}. Include: 1. Basic overview and purpose 2. Key features and capabilities 3. Installation/setup if applicable 4. Common usage examples with code snippets 5. Best practices and performance considerations 6. Common pitfalls to avoid 7. Version compatibility information 8. Links to official documentation 9. Community resources (forums, chat channels) 10. Related tools/libraries that work well with it. Crucially, also provide the main official URL(s) for this documentation on separate lines, prefixed with 'Official URL(s):'.`;
     return await this.performSearch(prompt);
   }
 
   private async handleFindApis(args: { requirement: string, context?: string }): Promise<string> {
     const { requirement, context = '' } = args;
-    const prompt = `Find and evaluate APIs that could be used for: ${requirement}. ${context ? 'Context: ' + context : ''
-      } For each API, provide:
-1. Name and brief description
-2. Key features and capabilities  
-3. Pricing model and rate limits
-4. Authentication methods
-5. Integration complexity
-6. Documentation quality and examples
-7. Community support and popularity
-8. Any potential limitations or concerns
-9. Code examples for basic usage
-10. Comparison with similar APIs
-11. SDK availability and language support`;
+    const prompt = `Find and evaluate APIs that could be used for: ${requirement}. ${context ? 'Context: ' + context : ''}. For each API, provide: 1. Name and brief description 2. Key features and capabilities 3. Pricing model and rate limits 4. Authentication methods 5. Integration complexity 6. Documentation quality and examples 7. Community support and popularity 8. Any potential limitations or concerns 9. Code examples for basic usage 10. Comparison with similar APIs 11. SDK availability and language support`;
     return await this.performSearch(prompt);
   }
 
@@ -1212,30 +1187,14 @@ Crucially, also provide the main official URL(s) for this documentation on separ
 
     try {
       // First try with detailed analysis
-      const prompt = `Analyze this code for deprecated features or patterns${technology ? ' in ' + technology : ''
-        }:
-
-${codeChunks[0]}
-
-Please provide:
-1. Identification of deprecated features/methods
-2. Current recommended alternatives  
-3. Step-by-step migration guide
-4. Impact assessment of the changes
-5. Deprecation timeline if available
-6. Code examples before/after updating
-7. Performance implications
-8. Backward compatibility considerations
-9. Testing recommendations for the changes`;
-
+      const prompt = `Analyze this code for deprecated features or patterns${technology ? ' in ' + technology : ''}: ${codeChunks[0]} Please provide: 1. Identification of deprecated features/methods 2. Current recommended alternatives 3. Step-by-step migration guide 4. Impact assessment of the changes 5. Deprecation timeline if available 6. Code examples before/after updating 7. Performance implications 8. Backward compatibility considerations 9. Testing recommendations for the changes`;
       const result = await this.performSearch(prompt);
       return result;
     } catch (error) {
       console.warn('Detailed analysis failed, trying simplified version:', error);
 
       // Fallback to simpler analysis
-      const simplePrompt = `List deprecated patterns in this code${technology ? ' for ' + technology : ''
-        } and suggest replacements:
+      const simplePrompt = `List deprecated patterns in this code${technology ? ' for ' + technology : ''} and suggest replacements:
 
 ${codeChunks[0]}`;
 
